@@ -47,4 +47,9 @@ data *split_data(data d, int part, int total);
 data concat_datas(data *d, int n);
 void fill_truth(char *path, char **labels, int k, float *truth);
 
+
+//added by minming
+data load_data_detection_3d(int n, char **pString, int m, int w, int h, int boxes, int classes, float jitter, float hue, float saturation, float exposure);
+void fill_truth_detection_3d(char *path, int num_boxes, float *truth, int classes, int flip, float dx, float dy, float sx, float sy);
+
 #endif

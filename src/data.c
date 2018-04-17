@@ -9,6 +9,7 @@
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
+
 list *get_paths(char *filename)
 {
     char *path;
@@ -165,11 +166,70 @@ box_label *read_boxes(char *filename, int *n)
     return boxes;
 }
 
+box_label_3d *read_boxes_3d(char *filename, int *n)
+{
+    FILE *file = fopen(filename, "r");
+    if(!file) file_error(filename);
+    float fx, fy, fh, fw;
+    float ex, ey, eh, ew;
+    int id;
+    int count = 0;
+    //read 64 once
+    int size = 64;
+    box_label_3d *boxes = calloc(size, sizeof(box_label_3d));
+    while(fscanf(file, "%d %f %f %f %f %f %f %f %f", &id, &fx, &fy, &fw, &fh, &ex, &ey, &ew, &eh) == 9){
+        if(count == size) {
+            size = size * 2;
+            //append the boxes
+            boxes = realloc(boxes, size*sizeof(box_label_3d));
+        }
+        boxes[count].id = id;
+        //front box
+        boxes[count].fx = fx;
+        boxes[count].fy = fy;
+        boxes[count].fh = fh;
+        boxes[count].fw = fw;
+        boxes[count].fleft   = fx - fw/2;
+        boxes[count].fright  = fx + fw/2;
+        boxes[count].ftop    = fy - fh/2;
+        boxes[count].fbottom = fy + fh/2;
+        //end box
+        boxes[count].ex = ex;
+        boxes[count].ey = ey;
+        boxes[count].eh = eh;
+        boxes[count].ew = ew;
+        boxes[count].eleft   = ex - ew/2;
+        boxes[count].eright  = ex + ew/2;
+        boxes[count].etop    = ey - eh/2;
+        boxes[count].ebottom = ey + eh/2;
+        ++count;
+    }
+    fclose(file);
+    *n = count;
+    return boxes;
+}
+
 void randomize_boxes(box_label *b, int n)
 {
     int i;
     for(i = 0; i < n; ++i){
         box_label swap = b[i];
+        int index = rand()%n;
+        b[i] = b[index];
+        b[index] = swap;
+    }
+}
+
+/**
+ * randomize the box order
+ * @param b
+ * @param n
+ */
+void randomize_boxes_3d(box_label_3d *b, int n)
+{
+    int i;
+    for(i = 0; i < n; ++i){
+        box_label_3d swap = b[i];
         int index = rand()%n;
         b[i] = b[index];
         b[index] = swap;
@@ -210,6 +270,75 @@ void correct_boxes(box_label *boxes, int n, float dx, float dy, float sx, float 
 
         boxes[i].w = constrain(0, 1, boxes[i].w);
         boxes[i].h = constrain(0, 1, boxes[i].h);
+    }
+}
+
+
+void correct_boxes_3d(box_label_3d *boxes, int n, float dx, float dy, float sx, float sy, int flip)
+{
+    int i;
+    for(i = 0; i < n; ++i){
+        if(boxes[i].fx == 0 && boxes[i].fy == 0 && boxes[i].ex == 0 && boxes[i].ey == 0) {
+            boxes[i].fx = 999999;
+            boxes[i].fy = 999999;
+            boxes[i].fw = 999999;
+            boxes[i].fh = 999999;
+            boxes[i].ex = 999999;
+            boxes[i].ey = 999999;
+            boxes[i].ew = 999999;
+            boxes[i].eh = 999999;
+            continue;
+        }
+        boxes[i].fleft   = boxes[i].fleft  * sx - dx;
+        boxes[i].fright  = boxes[i].fright * sx - dx;
+        boxes[i].ftop    = boxes[i].ftop   * sy - dy;
+        boxes[i].fbottom = boxes[i].fbottom* sy - dy;
+
+        boxes[i].eleft   = boxes[i].eleft  * sx - dx;
+        boxes[i].eright  = boxes[i].eright * sx - dx;
+        boxes[i].etop    = boxes[i].etop   * sy - dy;
+        boxes[i].ebottom = boxes[i].ebottom* sy - dy;
+
+        //if flip then swap the right and left of the box
+        if(flip){
+            float swap = boxes[i].fleft;
+            boxes[i].fleft = 1. - boxes[i].fright;
+            boxes[i].fright = 1. - swap;
+
+
+            swap = boxes[i].eleft;
+            boxes[i].eleft = 1. - boxes[i].eright;
+            boxes[i].eright = 1. - swap;
+        }
+
+        //constrain the range inside 0 to 1
+        boxes[i].fleft =  constrain(0, 1,    boxes[i].fleft);
+        boxes[i].fright = constrain(0, 1,    boxes[i].fright);
+        boxes[i].ftop =   constrain(0, 1,    boxes[i].ftop);
+        boxes[i].fbottom =   constrain(0, 1, boxes[i].fbottom);
+
+        boxes[i].eleft =  constrain(0, 1,    boxes[i].eleft);
+        boxes[i].eright = constrain(0, 1,    boxes[i].eright);
+        boxes[i].etop =   constrain(0, 1,    boxes[i].etop);
+        boxes[i].ebottom =   constrain(0, 1, boxes[i].ebottom);
+
+        //reconstruct the box back
+        boxes[i].fx = (boxes[i].fleft+    boxes[i].fright)/2;
+        boxes[i].fy = (boxes[i].ftop+     boxes[i].fbottom)/2;
+        boxes[i].fw = (boxes[i].fright -  boxes[i].fleft);
+        boxes[i].fh = (boxes[i].fbottom - boxes[i].ftop);
+
+        boxes[i].ex = (boxes[i].eleft+    boxes[i].eright)/2;
+        boxes[i].ey = (boxes[i].etop+     boxes[i].ebottom)/2;
+        boxes[i].ew = (boxes[i].eright -  boxes[i].eleft);
+        boxes[i].eh = (boxes[i].ebottom - boxes[i].etop);
+
+        //constrain the w and h
+        boxes[i].fw = constrain(0, 1, boxes[i].fw);
+        boxes[i].fh = constrain(0, 1, boxes[i].fh);
+
+        boxes[i].ew = constrain(0, 1, boxes[i].ew);
+        boxes[i].eh = constrain(0, 1, boxes[i].eh);
     }
 }
 
@@ -446,6 +575,76 @@ void fill_truth_detection(char *path, int num_boxes, float *truth, int classes, 
     }
     free(boxes);
 }
+
+/**
+ * Added by Minming Qian, fill truth detection data from the 2box 3d representation
+ * @param path
+ * @param num_boxes now it is 90, the max number of boxes can be handled
+ * @param truth the output to be filled in
+ * @param classes
+ * @param flip
+ * @param dx
+ * @param dy
+ * @param sx
+ * @param sy
+ */
+void fill_truth_detection_3d(char *path, int num_boxes, float *truth, int classes, int flip, float dx, float dy, float sx, float sy)
+{
+    char labelpath[4096];
+    //the default label path changed to 2bb, keep the image folder as "JPEGImages"
+    find_replace(path, "images", "labels_2bb", labelpath);
+    find_replace(labelpath, "JPEGImages", "labels_2bb", labelpath);
+
+    find_replace(labelpath, "raw", "labels_2bb", labelpath);
+    find_replace(labelpath, ".jpg", ".txt", labelpath);
+    find_replace(labelpath, ".png", ".txt", labelpath);
+    find_replace(labelpath, ".JPG", ".txt", labelpath);
+    find_replace(labelpath, ".JPEG", ".txt", labelpath);
+    int count = 0;
+    //modify to read the two boxes represent 3d, and randomize the order, correct according to the delta x, delta y,
+    //scale x and scale y
+    box_label_3d *boxes = read_boxes_3d(labelpath, &count);
+    randomize_boxes_3d(boxes, count);
+    correct_boxes_3d(boxes, count, dx, dy, sx, sy, flip);
+    if(count > num_boxes) count = num_boxes;
+    float fx,fy,fw,fh;
+    float ex,ey,ew,eh;
+    int id;
+    int i;
+    int sub = 0;
+
+    for (i = 0; i < count; ++i) {
+        fx =  boxes[i].fx;
+        fy =  boxes[i].fy;
+        fw =  boxes[i].fw;
+        fh =  boxes[i].fh;
+
+        ex =  boxes[i].ex;
+        ey =  boxes[i].ey;
+        ew =  boxes[i].ew;
+        eh =  boxes[i].eh;
+        id = boxes[i].id;
+
+        //any of the w h is small then 0.001, then it is ignored
+        if ((fw < .001 || fh < .001 || ew < .001 || eh < .001)) {
+            ++sub;
+            continue;
+        }
+
+        //fill the truth here
+        truth[(i-sub)*9+0] = fx;
+        truth[(i-sub)*9+1] = fy;
+        truth[(i-sub)*9+2] = fw;
+        truth[(i-sub)*9+3] = fh;
+        truth[(i-sub)*9+4] = ex;
+        truth[(i-sub)*9+5] = ey;
+        truth[(i-sub)*9+6] = ew;
+        truth[(i-sub)*9+7] = eh;
+        truth[(i-sub)*9+8] = id;
+    }
+    free(boxes);
+}
+
 
 #define NUMCHARS 37
 
@@ -1033,6 +1232,8 @@ void *load_thread(void *ptr)
         *a.d = load_data_region(a.n, a.paths, a.m, a.w, a.h, a.num_boxes, a.classes, a.jitter, a.hue, a.saturation, a.exposure);
     } else if (a.type == DETECTION_DATA){
         *a.d = load_data_detection(a.n, a.paths, a.m, a.w, a.h, a.num_boxes, a.classes, a.jitter, a.hue, a.saturation, a.exposure);
+    } else if (a.type == DETECTION_DATA_3D){
+        *a.d = load_data_detection_3d(a.n, a.paths, a.m, a.w, a.h, a.num_boxes, a.classes, a.jitter, a.hue, a.saturation, a.exposure);
     } else if (a.type == SWAG_DATA){
         *a.d = load_data_swag(a.paths, a.n, a.classes, a.jitter);
     } else if (a.type == COMPARE_DATA){
@@ -1048,6 +1249,85 @@ void *load_thread(void *ptr)
     }
     free(ptr);
     return 0;
+}
+
+/**
+ *
+ * @param n
+ * @param paths image paths
+ * @param m
+ * @param w net->w default is 416
+ * @param h net->h default is 416
+ * @param boxes number of boxes
+ * @param classes number of classes for the detection task
+ * @param jitter
+ * @param hue
+ * @param saturation
+ * @param exposure
+ * @return
+ */
+data load_data_detection_3d(int n, char **paths, int m, int w, int h, int boxes, int classes, float jitter, float hue,
+                            float saturation, float exposure) {
+    char **random_paths = get_random_paths(paths, n, m);
+    int i;
+    data d = {0};
+    d.shallow = 0;
+
+    d.X.rows = n;
+    d.X.vals = calloc(d.X.rows, sizeof(float*));
+    d.X.cols = h*w*3;
+
+    //here 5 is because x,y,w,h and id
+    //modify to 9 to fx,fy,fw,fh,ex,ey,ew,eh, and id
+    d.y = make_matrix(n, 9*boxes);
+    for(i = 0; i < n; ++i){
+        image orig = load_image_color(random_paths[i], 0, 0);
+        //the new sized image, is made up and be filled with .5 first
+        image sized = make_image(w, h, orig.c);
+        fill_image(sized, .5);
+
+        //jitter the w, ahd h, get the delta w, and delta h
+        float dw = jitter * orig.w;
+        float dh = jitter * orig.h;
+
+        //ratio to guide the scale of the image
+        float new_ar = (orig.w + rand_uniform(-dw, dw)) / (orig.h + rand_uniform(-dh, dh));
+        float scale = rand_uniform(.25, 2);
+
+        //new w, and new h
+        float nw, nh;
+
+        //if w < h, the scale according to h, else scale according to w
+        if(new_ar < 1){
+            nh = scale * h;
+            nw = nh * new_ar;
+        } else {
+            nw = scale * w;
+            nh = nw / new_ar;
+        }
+
+        // get two delta x and y
+        float dx = rand_uniform(0, w - nw);
+        float dy = rand_uniform(0, h - nh);
+
+        //put the orig image into the size image, it will automatically convert to int
+        place_image(orig, nw, nh, dx, dy, sized);
+
+        //distort the image using the 3 parameters
+        random_distort_image(sized, hue, saturation, exposure);
+
+        //flip or not
+        int flip = rand()%2;
+        if(flip) flip_image(sized);
+        d.X.vals[i] = sized.data;
+
+        //fill the truth data by reading the labels, delta x to be changed, and the scale
+        fill_truth_detection_3d(random_paths[i], boxes, d.y.vals[i], classes, flip, -dx/w, -dy/h, nw/w, nh/h);
+
+        free_image(orig);
+    }
+    free(random_paths);
+    return d;
 }
 
 pthread_t load_data_in_thread(load_args args)

@@ -27,6 +27,7 @@
 #include "parser.h"
 #include "region_layer.h"
 #include "yolo_layer.h"
+#include "kitti_layer.h"
 #include "reorg_layer.h"
 #include "rnn_layer.h"
 #include "route_layer.h"
@@ -52,6 +53,7 @@ LAYER_TYPE string_to_layer_type(char * type)
     if (strcmp(type, "[detection]")==0) return DETECTION;
     if (strcmp(type, "[region]")==0) return REGION;
     if (strcmp(type, "[yolo]")==0) return YOLO;
+    if (strcmp(type, "[kitti]")==0) return KITTI;
     if (strcmp(type, "[local]")==0) return LOCAL;
     if (strcmp(type, "[conv]")==0
             || strcmp(type, "[convolutional]")==0) return CONVOLUTIONAL;
@@ -300,6 +302,27 @@ int *parse_yolo_mask(char *a, int *num)
     return mask;
 }
 
+int *parse_kitti_mask(char *a, int *num)
+{
+    int *mask = 0;
+    if(a){
+        int len = strlen(a);
+        int n = 1;
+        int i;
+        for(i = 0; i < len; ++i){
+            if (a[i] == ',') ++n;
+        }
+        mask = calloc(n, sizeof(int));
+        for(i = 0; i < n; ++i){
+            int val = atoi(a);
+            mask[i] = val;
+            a = strchr(a, ',')+1;
+        }
+        *num = n;
+    }
+    return mask;
+}
+
 layer parse_yolo(list *options, size_params params)
 {
     int classes = option_find_int(options, "classes", 20);
@@ -321,6 +344,48 @@ layer parse_yolo(list *options, size_params params)
     char *map_file = option_find_str(options, "map", 0);
     if (map_file) l.map = read_map(map_file);
 
+    a = option_find_str(options, "anchors", 0);
+    if(a){
+        int len = strlen(a);
+        int n = 1;
+        int i;
+        for(i = 0; i < len; ++i){
+            if (a[i] == ',') ++n;
+        }
+        for(i = 0; i < n; ++i){
+            float bias = atof(a);
+            l.biases[i] = bias;
+            a = strchr(a, ',')+1;
+        }
+    }
+    return l;
+}
+
+layer parse_kitti(list *options, size_params params)
+{
+    int classes = option_find_int(options, "classes", 3);
+    //this number is 9, what 9 represent?
+    int total = option_find_int(options, "num", 1);
+    int num = total;
+
+    char *a = option_find_str(options, "mask", 0);
+    //the mask to used to select different anchors
+    int *mask = parse_kitti_mask(a, &num);
+    //this is defened in the kitti_layer.c
+    layer l = make_kitti_layer(params.batch, params.w, params.h, num, total, mask, classes);
+    assert(l.outputs == params.inputs);
+
+    l.max_boxes = option_find_int_quiet(options, "max",90);
+    l.jitter = option_find_float(options, "jitter", .2);
+
+    l.ignore_thresh = option_find_float(options, "ignore_thresh", .5);
+    l.truth_thresh = option_find_float(options, "truth_thresh", 1);
+    l.random = option_find_int_quiet(options, "random", 0);
+
+    char *map_file = option_find_str(options, "map", 0);
+    if (map_file) l.map = read_map(map_file);
+
+    //we read all the anchors, and the masks are used to choose different anchors
     a = option_find_str(options, "anchors", 0);
     if(a){
         int len = strlen(a);
@@ -791,6 +856,8 @@ network *parse_network_cfg(char *filename)
             l = parse_region(options, params);
         }else if(lt == YOLO){
             l = parse_yolo(options, params);
+        }else if(lt == KITTI){
+            l = parse_kitti(options, params);
         }else if(lt == DETECTION){
             l = parse_detection(options, params);
         }else if(lt == SOFTMAX){

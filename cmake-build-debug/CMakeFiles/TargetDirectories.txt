@@ -1,0 +1,3 @@
+/Volumes/shared/darknet/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Volumes/shared/darknet/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Volumes/shared/darknet/cmake-build-debug/CMakeFiles/darknet.dir

@@ -98,6 +98,22 @@ box float_to_box(float *f, int stride)
     return b;
 }
 
+box_3d float_to_box_3d(float *f, int stride)
+{
+    box_3d b = {0};
+    b.fx = f[0];
+    b.fy = f[1*stride];
+    b.fw = f[2*stride];
+    b.fh = f[3*stride];
+
+    b.ex = f[4];
+    b.ey = f[5*stride];
+    b.ew = f[6*stride];
+    b.eh = f[7*stride];
+
+    return b;
+}
+
 dbox derivative(box a, box b)
 {
     dbox d;
@@ -169,6 +185,19 @@ float box_intersection(box a, box b)
     return area;
 }
 
+float box_intersection_3d(box_3d a, box_3d b)
+{
+    float fw = overlap(a.fx, a.fw, b.fx, b.fw);
+    float fh = overlap(a.fy, a.fh, b.fy, b.fh);
+
+    float ew = overlap(a.ex, a.ew, b.ex, b.ew);
+    float eh = overlap(a.ey, a.eh, b.ey, b.eh);
+
+    if(fw < 0 || fh < 0 || ew < 0 || eh < 0) return 0;
+    float area = fw*fh + ew*eh;
+    return area;
+}
+
 float box_union(box a, box b)
 {
     float i = box_intersection(a, b);
@@ -176,9 +205,21 @@ float box_union(box a, box b)
     return u;
 }
 
+float box_union_3d(box_3d a, box_3d b)
+{
+    float i = box_intersection_3d(a, b);
+    float u = a.fw*a.fh + b.fw*b.fh  + a.ew*a.eh + b.ew*b.eh- i;
+    return u;
+}
+
 float box_iou(box a, box b)
 {
     return box_intersection(a, b)/box_union(a, b);
+}
+
+float box_iou_3d(box_3d a, box_3d b)
+{
+    return box_intersection_3d(a, b)/box_union_3d(a, b);
 }
 
 float box_rmse(box a, box b)

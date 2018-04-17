@@ -18,6 +18,7 @@
 #include "detection_layer.h"
 #include "region_layer.h"
 #include "yolo_layer.h"
+#include "kitti_layer.h"
 #include "normalization_layer.h"
 #include "batchnorm_layer.h"
 #include "maxpool_layer.h"
@@ -154,6 +155,8 @@ char *get_layer_string(LAYER_TYPE a)
             return "region";
         case YOLO:
             return "yolo";
+        case KITTI:
+            return "kitti";
         case DROPOUT:
             return "dropout";
         case CROP:
@@ -381,6 +384,8 @@ int resize_network(network *net, int w, int h)
             resize_region_layer(&l, w, h);
         }else if(l.type == YOLO){
             resize_yolo_layer(&l, w, h);
+        }else if(l.type == KITTI){
+            resize_kitti_layer(&l, w, h);
         }else if(l.type == ROUTE){
             resize_route_layer(&l, net);
         }else if(l.type == SHORTCUT){
@@ -516,6 +521,9 @@ int num_detections(network *net, float thresh)
         if(l.type == YOLO){
             s += yolo_num_detections(l, thresh);
         }
+        if(l.type == KITTI){
+            s += kitti_num_detections(l, thresh);
+        }
         if(l.type == DETECTION || l.type == REGION){
             s += l.w*l.h*l.n;
         }
@@ -560,6 +568,13 @@ void fill_network_boxes(network *net, int w, int h, float thresh, float hier, in
 }
 
 detection *get_network_boxes(network *net, int w, int h, float thresh, float hier, int *map, int relative, int *num)
+{
+    detection *dets = make_network_boxes(net, thresh, num);
+    fill_network_boxes(net, w, h, thresh, hier, map, relative, dets);
+    return dets;
+}
+
+detection *get_network_boxes_3d(network *net, int w, int h, float thresh, float hier, int *map, int relative, int *num)
 {
     detection *dets = make_network_boxes(net, thresh, num);
     fill_network_boxes(net, w, h, thresh, hier, map, relative, dets);

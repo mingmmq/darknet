@@ -86,6 +86,7 @@ typedef enum {
     XNOR,
     REGION,
     YOLO,
+    KITTI,
     REORG,
     UPSAMPLE,
     LOGXENT,
@@ -515,6 +516,11 @@ typedef struct{
     float x, y, w, h;
 } box;
 
+typedef struct{
+    float fx, fy, fw, fh;
+    float ex, ey, ew, eh;
+} box_3d;
+
 typedef struct detection{
     box bbox;
     int classes;
@@ -523,6 +529,15 @@ typedef struct detection{
     float objectness;
     int sort_class;
 } detection;
+
+typedef struct detection_3d{
+    box_3d bbox;
+    int classes;
+    float *prob;
+    float *mask;
+    float objectness;
+    int sort_class;
+} detection_3d;
 
 typedef struct matrix{
     int rows, cols;
@@ -540,7 +555,7 @@ typedef struct{
 } data;
 
 typedef enum {
-    CLASSIFICATION_DATA, DETECTION_DATA, CAPTCHA_DATA, REGION_DATA, IMAGE_DATA, COMPARE_DATA, WRITING_DATA, SWAG_DATA, TAG_DATA, OLD_CLASSIFICATION_DATA, STUDY_DATA, DET_DATA, SUPER_DATA, LETTERBOX_DATA, REGRESSION_DATA, SEGMENTATION_DATA, INSTANCE_DATA
+    CLASSIFICATION_DATA, DETECTION_DATA, DETECTION_DATA_3D, CAPTCHA_DATA, REGION_DATA, IMAGE_DATA, COMPARE_DATA, WRITING_DATA, SWAG_DATA, TAG_DATA, OLD_CLASSIFICATION_DATA, STUDY_DATA, DET_DATA, SUPER_DATA, LETTERBOX_DATA, REGRESSION_DATA, SEGMENTATION_DATA, INSTANCE_DATA
 } data_type;
 
 typedef struct load_args{
@@ -581,6 +596,15 @@ typedef struct{
     float x,y,w,h;
     float left, right, top, bottom;
 } box_label;
+
+//added by Minming Qian, to represent 3d with 2d boxes
+typedef struct{
+    int id;
+    float fx,fy,fw,fh;
+    float fleft, fright, ftop, fbottom;
+    float ex,ey,ew,eh;
+    float eleft, eright, etop, ebottom;
+} box_label_3d;
 
 
 network *load_network(char *cfg, char *weights, int clear);
@@ -796,5 +820,12 @@ int *read_intlist(char *s, int *n, int d);
 size_t rand_size_t();
 float rand_normal();
 float rand_uniform(float min, float max);
+
+//added by Minming Qian
+box_label_3d *read_boxes_3d(char *filename, int *n);
+void randomize_boxes_3d(box_label_3d *b, int n);
+void correct_boxes_3d(box_label_3d *boxes, int n, float dx, float dy, float sx, float sy, int flip);
+box_3d float_to_box_3d(float *f, int stride);
+float box_iou_3d(box_3d a, box_3d b);
 
 #endif
