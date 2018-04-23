@@ -574,9 +574,9 @@ detection *get_network_boxes(network *net, int w, int h, float thresh, float hie
     return dets;
 }
 
-detection *get_network_boxes_3d(network *net, int w, int h, float thresh, float hier, int *map, int relative, int *num)
+detection_3d *get_network_boxes_3d(network *net, int w, int h, float thresh, float hier, int *map, int relative, int *num)
 {
-    detection *dets = make_network_boxes(net, thresh, num);
+    detection_3d *dets = make_network_boxes(net, thresh, num);
     fill_network_boxes(net, w, h, thresh, hier, map, relative, dets);
     return dets;
 }
