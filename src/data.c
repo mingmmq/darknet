@@ -166,6 +166,37 @@ box_label *read_boxes(char *filename, int *n)
     return boxes;
 }
 
+radius_label *read_radius(char *filename, int *n)
+{
+    FILE *file = fopen(filename, "r");
+    if(!file) file_error(filename);
+    float x, y, h, w, r;
+    int id;
+    int count = 0;
+    int size = 64;
+    radius_label *boxes = calloc(size, sizeof(radius_label));
+    while(fscanf(file, "%d %f %f %f %f %f", &id, &x, &y, &w, &h, &r) == 6){
+        if(count == size) {
+            size = size * 2;
+            boxes = realloc(boxes, size*sizeof(box_label));
+        }
+        boxes[count].id = id;
+        boxes[count].x = x;
+        boxes[count].y = y;
+        boxes[count].h = h;
+        boxes[count].w = w;
+        boxes[count].r = r;
+        boxes[count].left   = x - w/2;
+        boxes[count].right  = x + w/2;
+        boxes[count].top    = y - h/2;
+        boxes[count].bottom = y + h/2;
+        ++count;
+    }
+    fclose(file);
+    *n = count;
+    return boxes;
+}
+
 box_label_3d *read_boxes_3d(char *filename, int *n)
 {
     FILE *file = fopen(filename, "r");
@@ -214,6 +245,18 @@ void randomize_boxes(box_label *b, int n)
     int i;
     for(i = 0; i < n; ++i){
         box_label swap = b[i];
+        int index = rand()%n;
+        b[i] = b[index];
+        b[index] = swap;
+    }
+}
+
+
+void randomize_radius(radius_label *b, int n)
+{
+    int i;
+    for(i = 0; i < n; ++i){
+        radius_label swap = b[i];
         int index = rand()%n;
         b[i] = b[index];
         b[index] = swap;
@@ -273,6 +316,48 @@ void correct_boxes(box_label *boxes, int n, float dx, float dy, float sx, float 
     }
 }
 
+
+
+void correct_radius(radius_label *boxes, int n, float dx, float dy, float sx, float sy, int flip)
+{
+    int i;
+    for(i = 0; i < n; ++i){
+        if(boxes[i].x == 0 && boxes[i].y == 0) {
+            boxes[i].x = 999999;
+            boxes[i].y = 999999;
+            boxes[i].w = 999999;
+            boxes[i].h = 999999;
+            continue;
+        }
+        boxes[i].left   = boxes[i].left  * sx - dx;
+        boxes[i].right  = boxes[i].right * sx - dx;
+        boxes[i].top    = boxes[i].top   * sy - dy;
+        boxes[i].bottom = boxes[i].bottom* sy - dy;
+
+        //if flip then we have to flip the radius as well
+        if(flip){
+            float swap = boxes[i].left;
+            boxes[i].left = 1. - boxes[i].right;
+            boxes[i].right = 1. - swap;
+
+            float r = boxes[i].r;
+            boxes[i].r = r > 0 ? (M_PI - r) : (-M_PI - r);
+        }
+
+        boxes[i].left =  constrain(0, 1, boxes[i].left);
+        boxes[i].right = constrain(0, 1, boxes[i].right);
+        boxes[i].top =   constrain(0, 1, boxes[i].top);
+        boxes[i].bottom =   constrain(0, 1, boxes[i].bottom);
+
+        boxes[i].x = (boxes[i].left+boxes[i].right)/2;
+        boxes[i].y = (boxes[i].top+boxes[i].bottom)/2;
+        boxes[i].w = (boxes[i].right - boxes[i].left);
+        boxes[i].h = (boxes[i].bottom - boxes[i].top);
+
+        boxes[i].w = constrain(0, 1, boxes[i].w);
+        boxes[i].h = constrain(0, 1, boxes[i].h);
+    }
+}
 
 void correct_boxes_3d(box_label_3d *boxes, int n, float dx, float dy, float sx, float sy, int flip)
 {
@@ -572,6 +657,50 @@ void fill_truth_detection(char *path, int num_boxes, float *truth, int classes, 
         truth[(i-sub)*5+2] = w;
         truth[(i-sub)*5+3] = h;
         truth[(i-sub)*5+4] = id;
+    }
+    free(boxes);
+}
+
+void fill_truth_radius(char *path, int num_boxes, float *truth, int classes, int flip, float dx, float dy, float sx, float sy)
+{
+    char labelpath[4096];
+    find_replace(path, "images", "labels", labelpath);
+    find_replace(labelpath, "JPEGImages", "labels", labelpath);
+
+    find_replace(labelpath, "raw", "labels", labelpath);
+    find_replace(labelpath, ".jpg", ".txt", labelpath);
+    find_replace(labelpath, ".png", ".txt", labelpath);
+    find_replace(labelpath, ".JPG", ".txt", labelpath);
+    find_replace(labelpath, ".JPEG", ".txt", labelpath);
+    int count = 0;
+    radius_label *boxes = read_radius(labelpath, &count);
+    randomize_radius(boxes, count);
+    correct_radius(boxes, count, dx, dy, sx, sy, flip);
+    if(count > num_boxes) count = num_boxes;
+    float x,y,w,h,r;
+    int id;
+    int i;
+    int sub = 0;
+
+    for (i = 0; i < count; ++i) {
+        x =  boxes[i].x;
+        y =  boxes[i].y;
+        w =  boxes[i].w;
+        h =  boxes[i].h;
+        r =  boxes[i].r;
+        id = boxes[i].id;
+
+        if ((w < .001 || h < .001)) {
+            ++sub;
+            continue;
+        }
+
+        truth[(i-sub)*6+0] = x;
+        truth[(i-sub)*6+1] = y;
+        truth[(i-sub)*6+2] = w;
+        truth[(i-sub)*6+3] = h;
+        truth[(i-sub)*6+4] = r;
+        truth[(i-sub)*6+5] = id;
     }
     free(boxes);
 }
@@ -1206,6 +1335,60 @@ data load_data_detection(int n, char **paths, int m, int w, int h, int boxes, in
     return d;
 }
 
+data load_data_radius(int n, char **paths, int m, int w, int h, int boxes, int classes, float jitter, float hue, float saturation, float exposure)
+{
+    char **random_paths = get_random_paths(paths, n, m);
+    int i;
+    data d = {0};
+    d.shallow = 0;
+
+    d.X.rows = n;
+    d.X.vals = calloc(d.X.rows, sizeof(float*));
+    d.X.cols = h*w*3;
+
+    d.y = make_matrix(n, 5*boxes);
+    for(i = 0; i < n; ++i){
+        image orig = load_image_color(random_paths[i], 0, 0);
+        image sized = make_image(w, h, orig.c);
+        fill_image(sized, .5);
+
+        float dw = jitter * orig.w;
+        float dh = jitter * orig.h;
+
+        float new_ar = (orig.w + rand_uniform(-dw, dw)) / (orig.h + rand_uniform(-dh, dh));
+        float scale = rand_uniform(.25, 2);
+
+        float nw, nh;
+
+        if(new_ar < 1){
+            nh = scale * h;
+            nw = nh * new_ar;
+        } else {
+            nw = scale * w;
+            nh = nw / new_ar;
+        }
+
+        float dx = rand_uniform(0, w - nw);
+        float dy = rand_uniform(0, h - nh);
+
+        place_image(orig, nw, nh, dx, dy, sized);
+
+        random_distort_image(sized, hue, saturation, exposure);
+
+        int flip = rand()%2;
+        if(flip) flip_image(sized);
+        d.X.vals[i] = sized.data;
+
+        //fill the ground truth information, and augment according to the image change
+        fill_truth_radius(random_paths[i], boxes, d.y.vals[i], classes, flip, -dx/w, -dy/h, nw/w, nh/h);
+
+        free_image(orig);
+    }
+    free(random_paths);
+    return d;
+}
+
+
 void *load_thread(void *ptr)
 {
     //printf("Loading data: %d\n", rand());
@@ -1232,6 +1415,8 @@ void *load_thread(void *ptr)
         *a.d = load_data_region(a.n, a.paths, a.m, a.w, a.h, a.num_boxes, a.classes, a.jitter, a.hue, a.saturation, a.exposure);
     } else if (a.type == DETECTION_DATA){
         *a.d = load_data_detection(a.n, a.paths, a.m, a.w, a.h, a.num_boxes, a.classes, a.jitter, a.hue, a.saturation, a.exposure);
+    } else if (a.type == RADIUS_DATA){
+        *a.d = load_data_radius(a.n, a.paths, a.m, a.w, a.h, a.num_boxes, a.classes, a.jitter, a.hue, a.saturation, a.exposure);
     } else if (a.type == DETECTION_DATA_3D){
         *a.d = load_data_detection_3d(a.n, a.paths, a.m, a.w, a.h, a.num_boxes, a.classes, a.jitter, a.hue, a.saturation, a.exposure);
     } else if (a.type == SWAG_DATA){

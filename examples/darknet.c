@@ -7,6 +7,7 @@
 extern void predict_classifier(char *datacfg, char *cfgfile, char *weightfile, char *filename, int top);
 extern void test_detector(char *datacfg, char *cfgfile, char *weightfile, char *filename, float thresh, float hier_thresh, char *outfile, int fullscreen);
 extern void run_yolo(int argc, char **argv);
+extern void run_radius(int argc, char **argv);
 extern void run_kitti(int argc, char **argv);
 extern void run_detector(int argc, char **argv);
 extern void run_coco(int argc, char **argv);
@@ -427,6 +428,8 @@ int main(int argc, char **argv)
         average(argc, argv);
     } else if (0 == strcmp(argv[1], "yolo")){
         run_yolo(argc, argv);
+    } else if (0 == strcmp(argv[1], "radius")){
+        run_radius(argc, argv);
     } else if (0 == strcmp(argv[1], "kitti")){
         run_kitti(argc, argv);
     } else if (0 == strcmp(argv[1], "super")){

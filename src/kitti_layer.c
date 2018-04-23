@@ -446,8 +446,12 @@ void forward_kitti_layer_gpu(const layer l, network net)
     int b, n;
     for (b = 0; b < l.batch; ++b){
         for(n = 0; n < l.n; ++n){
-            int index = entry_index(l, b, n*l.w*l.h, 0);
-            activate_array_gpu(l.output_gpu + index, 2*l.w*l.h, LOGISTIC);
+            //no logistic, the range of x,y could below zero
+            int index;
+//            index = entry_index(l, b, n*l.w*l.h, 0);
+//            activate_array_gpu(l.output_gpu + index, 2*l.w*l.h, LOGISTIC);
+//            index = entry_index(l, b, n*l.w*l.h, 4);
+//            activate_array_gpu(l.output_gpu + index, 2*l.w*l.h, LOGISTIC);
             index = entry_index(l, b, n*l.w*l.h, 8);
             activate_array_gpu(l.output_gpu + index, (1+l.classes)*l.w*l.h, LOGISTIC);
         }

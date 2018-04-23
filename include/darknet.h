@@ -86,6 +86,7 @@ typedef enum {
     XNOR,
     REGION,
     YOLO,
+    RADIUS,
     KITTI,
     REORG,
     UPSAMPLE,
@@ -555,7 +556,7 @@ typedef struct{
 } data;
 
 typedef enum {
-    CLASSIFICATION_DATA, DETECTION_DATA, DETECTION_DATA_3D, CAPTCHA_DATA, REGION_DATA, IMAGE_DATA, COMPARE_DATA, WRITING_DATA, SWAG_DATA, TAG_DATA, OLD_CLASSIFICATION_DATA, STUDY_DATA, DET_DATA, SUPER_DATA, LETTERBOX_DATA, REGRESSION_DATA, SEGMENTATION_DATA, INSTANCE_DATA
+    CLASSIFICATION_DATA, DETECTION_DATA, DETECTION_DATA_3D, CAPTCHA_DATA, REGION_DATA, IMAGE_DATA, COMPARE_DATA, WRITING_DATA, SWAG_DATA, TAG_DATA, OLD_CLASSIFICATION_DATA, STUDY_DATA, DET_DATA, SUPER_DATA, LETTERBOX_DATA, REGRESSION_DATA, SEGMENTATION_DATA, INSTANCE_DATA, RADIUS_DATA,
 } data_type;
 
 typedef struct load_args{
@@ -596,6 +597,13 @@ typedef struct{
     float x,y,w,h;
     float left, right, top, bottom;
 } box_label;
+
+typedef struct{
+    int id;
+    float r;
+    float x,y,w,h;
+    float left, right, top, bottom;
+} radius_label;
 
 //added by Minming Qian, to represent 3d with 2d boxes
 typedef struct{
