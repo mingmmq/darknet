@@ -835,5 +835,11 @@ void randomize_boxes_3d(box_label_3d *b, int n);
 void correct_boxes_3d(box_label_3d *boxes, int n, float dx, float dy, float sx, float sy, int flip);
 box_3d float_to_box_3d(float *f, int stride);
 float box_iou_3d(box_3d a, box_3d b);
+detection_3d *get_network_boxes_3d(network *net, int w, int h, float thresh, float hier, int *map, int relative, int *num);
+void do_nms_sort_3d(detection_3d *dets, int total, int classes, float thresh);
+void draw_detections_3d(image im, detection_3d *dets, int num, float thresh, char **names, image **alphabet, int classes);
+void free_detections_3d(detection_3d *dets, int n);
+int get_kitti_detections(layer l, int w, int h, int netw, int neth, float thresh, int *map, int relative, detection_3d *dets);
+
 
 #endif

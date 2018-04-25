@@ -547,6 +547,23 @@ detection *make_network_boxes(network *net, float thresh, int *num)
     return dets;
 }
 
+detection_3d *make_network_boxes_3d(network *net, float thresh, int *num)
+{
+    layer l = net->layers[net->n - 1];
+    int i;
+    int nboxes = num_detections(net, thresh);
+    if(num) *num = nboxes;
+    detection_3d *dets = calloc(nboxes, sizeof(detection_3d));
+    for(i = 0; i < nboxes; ++i){
+        dets[i].prob = calloc(l.classes, sizeof(float));
+        //what does the 4 means here
+        if(l.coords > 4){
+            dets[i].mask = calloc(l.coords-4, sizeof(float));
+        }
+    }
+    return dets;
+}
+
 void fill_network_boxes(network *net, int w, int h, float thresh, float hier, int *map, int relative, detection *dets)
 {
     int j;
@@ -567,6 +584,19 @@ void fill_network_boxes(network *net, int w, int h, float thresh, float hier, in
     }
 }
 
+
+void fill_network_boxes_3d(network *net, int w, int h, float thresh, float hier, int *map, int relative, detection_3d *dets)
+{
+    int j;
+    for(j = 0; j < net->n; ++j){
+        layer l = net->layers[j];
+        if(l.type == KITTI){
+            int count = get_kitti_detections(l, w, h, net->w, net->h, thresh, map, relative, dets);
+            dets += count;
+        }
+    }
+}
+
 detection *get_network_boxes(network *net, int w, int h, float thresh, float hier, int *map, int relative, int *num)
 {
     detection *dets = make_network_boxes(net, thresh, num);
@@ -576,12 +606,22 @@ detection *get_network_boxes(network *net, int w, int h, float thresh, float hie
 
 detection_3d *get_network_boxes_3d(network *net, int w, int h, float thresh, float hier, int *map, int relative, int *num)
 {
-    detection_3d *dets = make_network_boxes(net, thresh, num);
-    fill_network_boxes(net, w, h, thresh, hier, map, relative, dets);
+    detection_3d *dets = make_network_boxes_3d(net, thresh, num);
+    fill_network_boxes_3d(net, w, h, thresh, hier, map, relative, dets);
     return dets;
 }
 
 void free_detections(detection *dets, int n)
+{
+    int i;
+    for(i = 0; i < n; ++i){
+        free(dets[i].prob);
+        if(dets[i].mask) free(dets[i].mask);
+    }
+    free(dets);
+}
+
+void free_detections_3d(detection_3d *dets, int n)
 {
     int i;
     for(i = 0; i < n; ++i){

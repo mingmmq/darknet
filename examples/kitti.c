@@ -508,12 +508,12 @@ void test_kitti(char *datacfg, char *cfgfile, char *weightfile, char *filename, 
         network_predict(net, X);
         printf("%s: Predicted in %f seconds.\n", input, what_time_is_it_now()-time);
         int nboxes = 0;
-        detection *dets = get_network_boxes(net, im.w, im.h, thresh, hier_thresh, 0, 1, &nboxes);
-        //printf("%d\n", nboxes);
-        //if (nms) do_nms_obj(boxes, probs, l.w*l.h*l.n, l.classes, nms);
-        if (nms) do_nms_sort(dets, nboxes, l.classes, nms);
-        draw_detections(im, dets, nboxes, thresh, names, alphabet, l.classes);
-        free_detections(dets, nboxes);
+        detection_3d *dets = get_network_boxes_3d(net, im.w, im.h, thresh, hier_thresh, 0, 1, &nboxes);
+        printf("%d\n", nboxes);
+//        if (nms) do_nms_obj(boxes, probs, l.w*l.h*l.n, l.classes, nms);
+        if (nms) do_nms_sort_3d(dets, nboxes, l.classes, nms);
+        draw_detections_3d(im, dets, nboxes, thresh, names, alphabet, l.classes);
+        free_detections_3d(dets, nboxes);
         if(outfile){
             save_image(im, outfile);
         }

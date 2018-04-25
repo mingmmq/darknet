@@ -340,7 +340,7 @@ void backward_kitti_layer(const layer l, network net)
    axpy_cpu(l.batch*l.inputs, 1, l.delta, 1, net.delta, 1);
 }
 
-void correct_kitti_boxes(detection *dets, int n, int w, int h, int netw, int neth, int relative)
+void correct_kitti_boxes(detection_3d *dets, int n, int w, int h, int netw, int neth, int relative)
 {
     int i;
     int new_w=0;
@@ -353,17 +353,31 @@ void correct_kitti_boxes(detection *dets, int n, int w, int h, int netw, int net
         new_w = (w * neth)/h;
     }
     for (i = 0; i < n; ++i){
-        box b = dets[i].bbox;
-        b.x =  (b.x - (netw - new_w)/2./netw) / ((float)new_w/netw); 
-        b.y =  (b.y - (neth - new_h)/2./neth) / ((float)new_h/neth); 
-        b.w *= (float)netw/new_w;
-        b.h *= (float)neth/new_h;
+        box_3d b = dets[i].bbox;
+        b.fx =  (b.fx - (netw - new_w)/2./netw) / ((float)new_w/netw);
+        b.fy =  (b.fy - (neth - new_h)/2./neth) / ((float)new_h/neth);
+        b.ex =  (b.ex - (netw - new_w)/2./netw) / ((float)new_w/netw);
+        b.ey =  (b.ey - (neth - new_h)/2./neth) / ((float)new_h/neth);
+
+        b.fw *= (float)netw/new_w;
+        b.fh *= (float)neth/new_h;
+        b.ew *= (float)netw/new_w;
+        b.eh *= (float)neth/new_h;
+
         if(!relative){
-            b.x *= w;
-            b.w *= w;
-            b.y *= h;
-            b.h *= h;
+            //front box scale
+            b.fx *= w;
+            b.fw *= w;
+            b.fy *= h;
+            b.fh *= h;
+
+            //end box scale
+            b.ex *= w;
+            b.ew *= w;
+            b.ey *= h;
+            b.eh *= h;
         }
+
         dets[i].bbox = b;
     }
 }
@@ -374,7 +388,7 @@ int kitti_num_detections(layer l, float thresh)
     int count = 0;
     for (i = 0; i < l.w*l.h; ++i){
         for(n = 0; n < l.n; ++n){
-            int obj_index  = entry_index(l, 0, n*l.w*l.h + i, 4);
+            int obj_index  = entry_index(l, 0, n*l.w*l.h + i, 8);
             if(l.output[obj_index] > thresh){
                 ++count;
             }
@@ -390,7 +404,7 @@ void avg_flipped_kitti(layer l)
     for (j = 0; j < l.h; ++j) {
         for (i = 0; i < l.w/2; ++i) {
             for (n = 0; n < l.n; ++n) {
-                for(z = 0; z < l.classes + 4 + 1; ++z){
+                for(z = 0; z < l.classes + 8 + 1; ++z){
                     int i1 = z*l.w*l.h*l.n + n*l.w*l.h + j*l.w + i;
                     int i2 = z*l.w*l.h*l.n + n*l.w*l.h + j*l.w + (l.w - i - 1);
                     float swap = flip[i1];
@@ -419,7 +433,7 @@ int get_kitti_detections(layer l, int w, int h, int netw, int neth, float thresh
         int row = i / l.w;
         int col = i % l.w;
         for(n = 0; n < l.n; ++n){
-            int obj_index  = entry_index(l, 0, n*l.w*l.h + i, 4);
+            int obj_index  = entry_index(l, 0, n*l.w*l.h + i, 8);
             float objectness = predictions[obj_index];
             if(objectness <= thresh) continue;
             int box_index  = entry_index(l, 0, n*l.w*l.h + i, 0);
@@ -427,7 +441,7 @@ int get_kitti_detections(layer l, int w, int h, int netw, int neth, float thresh
             dets[count].objectness = objectness;
             dets[count].classes = l.classes;
             for(j = 0; j < l.classes; ++j){
-                int class_index = entry_index(l, 0, n*l.w*l.h + i, 4 + 1 + j);
+                int class_index = entry_index(l, 0, n*l.w*l.h + i, 8 + 1 + j);
                 float prob = objectness*predictions[class_index];
                 dets[count].prob[j] = (prob > thresh) ? prob : 0;
             }
