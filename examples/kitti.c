@@ -273,10 +273,10 @@ void validate_kitti_flip(char *datacfg, char *cfgfile, char *weightfile, char *o
             int w = val[t].w;
             int h = val[t].h;
             int num = 0;
-            detection *dets = get_network_boxes(net, w, h, thresh, .5, map, 0, &num);
-            if (nms) do_nms_sort(dets, num, classes, nms);
+            detection_3d *dets = get_network_boxes_3d(net, w, h, thresh, .5, map, 0, &num);
+            if (nms) do_nms_sort_3d(dets, num, classes, nms);
             print_kitti_detections(fps, id, dets, num, classes, w, h);
-            free_detections(dets, num);
+            free_detections_3d(dets, num);
             free(id);
             free_image(val[t]);
             free_image(val_resized[t]);
@@ -333,7 +333,7 @@ void validate_kitti(char *datacfg, char *cfgfile, char *weightfile, char *outfil
     int i=0;
     int t;
 
-    float thresh = .005;
+    float thresh = .5;
     float nms = .45;
 
     int nthreads = 4;
@@ -377,10 +377,10 @@ void validate_kitti(char *datacfg, char *cfgfile, char *weightfile, char *outfil
             int w = val[t].w;
             int h = val[t].h;
             int nboxes = 0;
-            detection *dets = get_network_boxes(net, w, h, thresh, .5, map, 0, &nboxes);
-            if (nms) do_nms_sort(dets, nboxes, classes, nms);
+            detection_3d *dets = get_network_boxes_3d(net, w, h, thresh, .5, map, 0, &nboxes);
+            if (nms) do_nms_sort_3d(dets, nboxes, classes, nms);
             print_kitti_detections(fps, id, dets, nboxes, classes, w, h);
-            free_detections(dets, nboxes);
+            free_detections_3d(dets, nboxes);
             free(id);
             free_image(val[t]);
             free_image(val_resized[t]);

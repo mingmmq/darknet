@@ -207,6 +207,80 @@ void draw_box_width(image a, int x1, int y1, int x2, int y2, int w, float r, flo
     }
 }
 
+void draw_line(image a, int x1, int y1, int x2, int y2, float r, float g, float b)
+{
+    int i;
+    if(x1 < 0) x1 = 0;
+    if(x1 >= a.w) x1 = a.w-1;
+    if(x2 < 0) x2 = 0;
+    if(x2 >= a.w) x2 = a.w-1;
+
+    if(y1 < 0) y1 = 0;
+    if(y1 >= a.h) y1 = a.h-1;
+    if(y2 < 0) y2 = 0;
+    if(y2 >= a.h) y2 = a.h-1;
+
+    int x=0, y = 0;
+    if (fabs(x2 - x1) > fabs(y2 - y1)) {
+        for (i = 0; i < abs(x2 - x1); i++) {
+            if (x1 < x2) {
+                x = x1 + i ;
+                if (y1 < y2) {
+                    y = y1 + i * fabs((float)(y2 - y1))/fabs((float)(x2 - x1));
+                } else {
+                    y = y1 - i * fabs((float)(y2 - y1))/fabs((float)(x2 - x1));
+                }
+            } else {
+                x = x2 + i;
+                if (y1 < y2) {
+                    y = y2 - i * fabs((float)(y2 - y1))/fabs((float)(x2 - x1));
+                } else {
+                    y = y2 + i * fabs((float)(y2 - y1))/fabs((float)(x2 - x1));
+                }
+            }
+
+            a.data[x + y*a.w + 0*a.w*a.h] = r;
+            a.data[x + y*a.w + 1*a.w*a.h] = g;
+            a.data[x + y*a.w + 2*a.w*a.h] = b;
+        }
+    }
+    else{
+        for (i = 0; i < abs(y2 - y1); i++) {
+            if (y1 < y2) {
+                y = y1 + i;
+                if (x1 < x2) {
+                    x = x1 + i * fabs((float)(x2 - x1))/fabs((float)(y2 - y1));;
+                } else {
+                    x = x1 - i * fabs((float)(x2 - x1))/fabs((float)(y2 - y1));;
+                }
+            } else {
+                y = y2 + i;
+
+                if (x2 < x1) {
+                    x = x2 + i * fabs((float)(x2 - x1))/fabs((float)(y2 - y1));;
+                } else {
+                    x = x2 - i * fabs((float)(x2 - x1))/fabs((float)(y2 - y1));;
+                }
+            }
+
+            a.data[x + y*a.w + 0*a.w*a.h] = r;
+            a.data[x + y*a.w + 1*a.w*a.h] = g;
+            a.data[x + y*a.w + 2*a.w*a.h] = b;
+        }
+    }
+
+
+
+}
+
+void draw_line_width(image a, int x1, int y1, int x2, int y2, int w, float r, float g, float b)
+{
+    int i;
+    for(i = 0; i < w; ++i){
+        draw_line(a, x1+i, y1+i, x2-i, y2-i, r, g, b);
+    }
+}
+
 void draw_bbox(image a, box bbox, int w, float r, float g, float b)
 {
     int left  = (bbox.x-bbox.w/2)*a.w;
@@ -382,6 +456,14 @@ void draw_detections_3d(image im, detection_3d *dets, int num, float thresh, cha
             draw_box_width(im, fleft, ftop, fright, fbot, width, red, green, blue);
             //draw the end
             draw_box_width(im, eleft, etop, eright, ebot, width, red, green, blue);
+
+            //draw the connections
+            printf("draw lines");
+            draw_line_width(im, fleft, ftop, eleft, etop, width, red, green, blue);
+            draw_line_width(im, fright, ftop, eright, etop, width, red, green, blue);
+            draw_line_width(im, fright, fbot, eright, ebot, width, red, green, blue);
+            draw_line_width(im, fleft, fbot, eleft, ebot, width, red, green, blue);
+
             if (alphabet) {
                 image label = get_label(alphabet, labelstr, (im.h*.03));
                 draw_label(im, ftop + width, fleft, label, rgb);

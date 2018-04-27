@@ -25,8 +25,6 @@
       <change beforePath="$PROJECT_DIR$/cfg/alexnet.cfg" beforeDir="false" afterPath="$PROJECT_DIR$/cfg/alexnet.cfg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cfg/cifar.cfg" beforeDir="false" afterPath="$PROJECT_DIR$/cfg/cifar.cfg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cfg/voc.data" beforeDir="false" afterPath="$PROJECT_DIR$/cfg/voc.data" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/9k.labels" beforeDir="false" afterPath="$PROJECT_DIR$/data/9k.labels" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/9k.names" beforeDir="false" afterPath="$PROJECT_DIR$/data/9k.names" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/9k.tree" beforeDir="false" afterPath="$PROJECT_DIR$/data/9k.tree" afterDir="false" />
@@ -828,7 +826,6 @@
       <change beforePath="$PROJECT_DIR$/examples/tag.c" beforeDir="false" afterPath="$PROJECT_DIR$/examples/tag.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/examples/voxel.c" beforeDir="false" afterPath="$PROJECT_DIR$/examples/voxel.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/examples/writing.c" beforeDir="false" afterPath="$PROJECT_DIR$/examples/writing.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/darknet.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/darknet.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/libdarknet.a" beforeDir="false" afterPath="$PROJECT_DIR$/libdarknet.a" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/libdarknet.so" beforeDir="false" afterPath="$PROJECT_DIR$/libdarknet.so" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/python/darknet.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/darknet.py" afterDir="false" />
@@ -850,7 +847,6 @@
       <change beforePath="$PROJECT_DIR$/src/blas.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/blas.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/blas.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/blas.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/blas_kernels.cu" beforeDir="false" afterPath="$PROJECT_DIR$/src/blas_kernels.cu" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/box.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/box.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/box.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/box.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/classifier.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/classifier.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/col2im.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/col2im.c" afterDir="false" />
@@ -890,7 +886,6 @@
       <change beforePath="$PROJECT_DIR$/src/im2col_kernels.cu" beforeDir="false" afterPath="$PROJECT_DIR$/src/im2col_kernels.cu" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/image.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/image.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/image.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/image.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/kitti_layer.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/kitti_layer.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/l2norm_layer.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/l2norm_layer.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/l2norm_layer.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/l2norm_layer.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/layer.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/layer.c" afterDir="false" />
@@ -908,7 +903,6 @@
       <change beforePath="$PROJECT_DIR$/src/maxpool_layer.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/maxpool_layer.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/maxpool_layer.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/maxpool_layer.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/maxpool_layer_kernels.cu" beforeDir="false" afterPath="$PROJECT_DIR$/src/maxpool_layer_kernels.cu" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/network.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/network.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/network.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/network.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/normalization_layer.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/normalization_layer.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/normalization_layer.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/normalization_layer.h" afterDir="false" />
@@ -951,93 +945,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="kitti.c" pinned="false" current-in-tab="false">
+      <file leaf-file-name="kitti.c" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/examples/kitti.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="386">
-              <caret line="514" column="25" selection-start-line="514" selection-start-column="25" selection-end-line="514" selection-end-column="25" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="image.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/image.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1542">
-              <caret line="381" column="24" selection-start-line="381" selection-start-column="24" selection-end-line="381" selection-end-column="24" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="data.c" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/data.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="728">
-              <caret line="223" column="25" selection-start-line="223" selection-start-column="25" selection-end-line="223" selection-end-column="25" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="box.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/box.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="606">
-              <caret line="129" column="4" selection-start-line="129" selection-start-column="4" selection-end-line="129" selection-end-column="4" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="coco.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/examples/coco.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="291">
-              <caret line="325" column="8" selection-start-line="325" selection-start-column="8" selection-end-line="325" selection-end-column="8" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="network.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/network.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="324">
-              <caret line="609" column="24" selection-start-line="609" selection-start-column="24" selection-end-line="609" selection-end-column="24" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="yolo_layer.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/yolo_layer.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="753">
-              <caret line="315" column="22" selection-start-line="315" selection-start-column="4" selection-end-line="315" selection-end-column="23" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="darknet.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/examples/darknet.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="227">
-              <caret line="431" column="19" selection-start-line="431" selection-start-column="19" selection-end-line="431" selection-end-column="19" />
-              <folding>
-                <element signature="e#0#20#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="kitti_layer.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/kitti_layer.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="480">
-              <caret line="116" column="12" selection-start-line="116" selection-start-column="12" selection-end-line="116" selection-end-column="12" />
-              <folding>
-                <element signature="e#0#24#0" expanded="true" />
-                <element signature="e#14805#15938#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="444">
+              <caret line="160" column="33" selection-start-line="160" selection-start-column="30" selection-end-line="160" selection-end-column="34" />
             </state>
           </provider>
         </entry>
@@ -1046,7 +958,58 @@
         <entry file="file://$PROJECT_DIR$/include/darknet.h">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="690">
-              <caret line="839" column="17" selection-start-line="839" selection-start-column="17" selection-end-line="839" selection-end-column="17" />
+              <caret line="837" column="14" selection-start-line="837" selection-start-column="14" selection-end-line="837" selection-end-column="14" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="network.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/network.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="324">
+              <caret line="606" column="14" selection-start-line="606" selection-start-column="14" selection-end-line="606" selection-end-column="14" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="image.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/image.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-130">
+              <caret line="261" column="25" selection-start-line="261" selection-start-column="25" selection-end-line="261" selection-end-column="25" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="kitti_layer.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/kitti_layer.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="156">
+              <caret line="399" column="4" selection-start-line="399" selection-start-column="4" selection-end-line="399" selection-end-column="4" />
+              <folding>
+                <element signature="e#0#24#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="image.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/image.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="721">
+              <caret line="64" selection-start-line="64" selection-end-line="64" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="box.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/box.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="75">
+              <caret line="5" selection-start-line="5" selection-end-line="5" />
             </state>
           </provider>
         </entry>
@@ -1055,12 +1018,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>max_batches</find>
-      <find>load_data_detection_3d</find>
-      <find>randomize_boxes</find>
-      <find>print_letters</find>
-      <find>parse_yolo</find>
-      <find>print_image</find>
       <find>coords</find>
       <find>make_kitti_layer</find>
       <find>l.co</find>
@@ -1085,6 +1042,12 @@
       <find>get_kitti_detections</find>
       <find>get_yolo_detections</find>
       <find>fill_truth_</find>
+      <find>line</find>
+      <find>draw_line</find>
+      <find>draw</find>
+      <find>get_network_boxes_3d</find>
+      <find>print_kitti_detections</find>
+      <find>detection</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -1116,6 +1079,8 @@
         <option value="$PROJECT_DIR$/include/darknet.h" />
         <option value="$PROJECT_DIR$/src/kitti_layer.c" />
         <option value="$PROJECT_DIR$/src/network.c" />
+        <option value="$PROJECT_DIR$/src/image.h" />
+        <option value="$PROJECT_DIR$/src/image.c" />
         <option value="$PROJECT_DIR$/examples/kitti.c" />
       </list>
     </option>
@@ -1237,25 +1202,26 @@
       <workItem from="1524018820983" duration="5508000" />
       <workItem from="1524204003361" duration="5599000" />
       <workItem from="1524444613432" duration="11483000" />
-      <workItem from="1524537097475" duration="5994000" />
+      <workItem from="1524537097475" duration="6297000" />
+      <workItem from="1524621107021" duration="9142000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="47268000" />
+    <option name="totallyTimeSpent" value="56713000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="143" y="23" width="1570" height="1129" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.79136693" visible="true" weight="0.16950262" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.79016787" visible="true" weight="0.17146596" />
       <window_info anchor="bottom" id="TODO" order="7" />
       <window_info anchor="bottom" id="CMake" order="0" visible="true" weight="0.17343906" />
       <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Find" order="2" weight="0.15503876" />
       <window_info anchor="bottom" id="Run" order="3" />
       <window_info anchor="right" id="Version Control" order="4" sideWeight="0.4994641" weight="0.16904277" />
-      <window_info id="Structure" order="1" sideWeight="0.2086331" side_tool="true" visible="true" weight="0.16950262" />
+      <window_info id="Structure" order="1" sideWeight="0.20983213" side_tool="true" visible="true" weight="0.17146596" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.32903865" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.4" />
       <window_info id="Favorites" order="2" sideWeight="0.50125" side_tool="true" weight="0.30845442" />
@@ -1280,27 +1246,10 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="3" />
+      <option name="time" value="4" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/examples/yolo.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4980">
-          <caret line="332" selection-start-line="332" selection-end-line="332" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples/darknet.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6450">
-          <caret line="430" column="17" selection-start-line="430" selection-start-column="17" selection-end-line="430" selection-end-column="17" />
-          <folding>
-            <element signature="e#0#20#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/network.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="8640">
@@ -1362,7 +1311,6 @@
           <caret line="317" column="19" selection-start-line="317" selection-start-column="19" selection-end-line="317" selection-end-column="19" />
           <folding>
             <element signature="e#0#24#0" expanded="true" />
-            <element signature="e#14805#15938#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1585,9 +1533,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="450">
           <caret line="396" column="7" selection-start-line="396" selection-start-column="7" selection-end-line="396" selection-end-column="7" />
-          <folding>
-            <element signature="e#870#895#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1595,10 +1540,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="339" column="25" selection-start-line="339" selection-start-column="25" selection-end-line="339" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-            <element signature="e#12737#13707#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1633,27 +1574,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/kitti_layer.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="116" column="12" selection-start-line="116" selection-start-column="12" selection-end-line="116" selection-end-column="12" />
-          <folding>
-            <element signature="e#0#24#0" expanded="true" />
-            <element signature="e#14805#15938#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/network.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="609" column="24" selection-start-line="609" selection-start-column="24" selection-end-line="609" selection-end-column="24" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/box.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="606">
@@ -1661,31 +1581,65 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/examples/kitti.c">
+    <entry file="file://$PROJECT_DIR$/src/data.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="386">
-          <caret line="514" column="25" selection-start-line="514" selection-start-column="25" selection-end-line="514" selection-end-column="25" />
+        <state relative-caret-position="237">
+          <caret line="223" column="25" selection-start-line="223" selection-start-column="25" selection-end-line="223" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/box.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" selection-start-line="5" selection-end-line="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/image.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="721">
+          <caret line="64" selection-start-line="64" selection-end-line="64" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/kitti_layer.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="156">
+          <caret line="399" column="4" selection-start-line="399" selection-start-column="4" selection-end-line="399" selection-end-column="4" />
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/image.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-130">
+          <caret line="261" column="25" selection-start-line="261" selection-start-column="25" selection-end-line="261" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/network.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="606" column="14" selection-start-line="606" selection-start-column="14" selection-end-line="606" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/include/darknet.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="690">
-          <caret line="839" column="17" selection-start-line="839" selection-start-column="17" selection-end-line="839" selection-end-column="17" />
+          <caret line="837" column="14" selection-start-line="837" selection-start-column="14" selection-end-line="837" selection-end-column="14" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/image.c">
+    <entry file="file://$PROJECT_DIR$/examples/kitti.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1542">
-          <caret line="381" column="24" selection-start-line="381" selection-start-column="24" selection-end-line="381" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/data.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="728">
-          <caret line="223" column="25" selection-start-line="223" selection-start-column="25" selection-end-line="223" selection-end-column="25" />
+        <state relative-caret-position="444">
+          <caret line="160" column="33" selection-start-line="160" selection-start-column="30" selection-end-line="160" selection-end-column="34" />
         </state>
       </provider>
     </entry>
