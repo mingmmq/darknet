@@ -1,0 +1,5 @@
+classes= 3
+train  = /home/qianminming/4t/data/kitti/train.txt
+valid  = /home/qianminming/4t/data/kitti/test.txt
+names = data/kitti_2bb.names
+backup = /home/qianminming/4t/backup/kitti_yolov3_2bb
