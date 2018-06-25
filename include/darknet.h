@@ -614,6 +614,13 @@ typedef struct{
     float eleft, eright, etop, ebottom;
 } box_label_3d;
 
+//added by Minming Qian, to represet 3d with 8 points
+//8p stands for 8 points
+typedef struct {
+    int id;
+    float fx1, fy1, fx2, fy2, fx3, fy3, fx4, fy4;
+    float ex1, ey1, ex2, ey2, ex3, ey3, ex4, ey4;
+} box_label_8p;
 
 network *load_network(char *cfg, char *weights, int clear);
 load_args get_base_args(network *net);
